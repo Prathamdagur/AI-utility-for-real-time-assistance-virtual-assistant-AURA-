@@ -1,0 +1,245 @@
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    background-color: #000; /* keep dark background */
+}
+
+/* Center wrapper used by index.html to perfectly center the AURA emblem */
+.center-wrapper {
+    width: 0%;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative; /* so absolute children (voice-input) position relative to this */
+}
+
+/* Fixed narrow panel so emblem and controls stay aligned even in narrow windows */
+.panel {
+    width: 380px;        /* compact width */
+    height: 520px;       /* fixed height instead of 92vh */
+    max-width: 95vw;     /* still responsive on small screens */
+    max-height: 95vh;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+
+.compact-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 34px;
+    height: 28px;
+    border-radius: 6px;
+    background: rgba(0,0,0,0.45);
+    color: #cfffff;
+    border: 1px solid rgba(0,230,255,0.08);
+    cursor: pointer;
+    z-index: 1300;
+}
+
+.square {
+    width: 320px; /* smaller, live-server-friendly size */
+    height: 320px;
+    position: relative;
+    max-width: 90vw;
+    max-height: 90vh;
+}
+
+.square span {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 40%;
+    left: 50%;
+    border-radius: 38% 62% 63% 37% / 41% 44% 56% 59%;
+    box-shadow:
+        0 0 5px #00ccff,
+        0 0 15px #00ccff,
+        0 0 30px #00ccff,
+        inset 0 0 5px #00ccff;
+}
+
+.square span:nth-child(1) {
+    animation: animate1 6s linear infinite, glow 2s ease-in-out infinite;
+}
+
+.square span:nth-child(2) {
+    animation: animate2 4s linear infinite, glow 2s ease-in-out infinite;
+    animation-direction: reverse; /* Added to make it spin the other way */
+}
+
+.square span:nth-child(3) {
+    animation: animate3 8s linear infinite, glow 2s ease-in-out infinite;
+}
+
+.aura-title {
+    position: absolute;
+    top: 40%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: #00e6ff; /* bright cyan */
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-weight: 700;
+    font-size: 48px; /* reduced for smaller square */
+    letter-spacing: 4px;
+    text-align: center;
+    z-index: 10; /* above the circles */
+    text-shadow:
+        0 0 8px rgba(0,230,255,0.9),
+        0 0 20px rgba(0,204,255,0.8),
+        0 0 30px rgba(0,153,255,0.6);
+    pointer-events: none; /* allow clicks through */
+}
+
+@media (max-width: 600px) {
+    .aura-title {
+        font-size: 32px;
+        letter-spacing: 4px;
+    }
+}
+
+@keyframes animate1 {
+    0% {
+        transform: translate(-50%, -50%) rotate(0deg);
+    }
+    100% {
+        transform: translate(-50%, -50%) rotate(360deg);
+    }
+}
+
+@keyframes animate2 {
+    0% {
+        transform: translate(-50%, -50%) rotate(0deg);
+    }
+    100% {
+        transform: translate(-50%, -50%) rotate(360deg);
+    }
+}
+
+@keyframes animate3 {
+    0% {
+        transform: translate(-50%, -50%) rotate(0deg);
+    }
+    100% {
+        transform: translate(-50%, -50%) rotate(360deg);
+    }
+}
+
+@keyframes glow {
+    0% {
+        box-shadow:
+            0 0 5px #00ccff,
+            0 0 15px #00ccff,
+            0 0 30px #00ccff,
+            inset 0 0 5px #00ccff;
+    }
+    50% {
+        box-shadow:
+            0 0 10px #00ccff,
+            0 0 20px #00ccff,
+            0 0 40px #00ccff,
+            inset 0 0 10px #00ccff;
+    }
+    100% {
+        box-shadow:
+            0 0 5px #00ccff,
+            0 0 15px #00ccff,
+            0 0 30px #00ccff,
+            inset 0 0 5px #00ccff;
+    }
+}
+
+/* Microphone button */
+.mic-btn {
+    /* placed inside .voice-input; don't use fixed positioning */
+    position: relative;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: rgba(0,0,0,0.6);
+    color: #bffcff;
+    border: 2px solid rgba(0,230,255,0.18);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1100;
+    cursor: pointer;
+    transition: transform 150ms ease, box-shadow 150ms ease, background 150ms ease;
+    box-shadow: 0 8px 20px rgba(0,230,255,0.05), 0 0 18px rgba(0,230,255,0.06);
+}
+
+.mic-btn:hover { transform: translateY(-3px); box-shadow: 0 14px 36px rgba(0,230,255,0.12); }
+
+.mic-btn svg { color: #cfffff; }
+
+.mic-btn.listening {
+    animation: micPulse 1.6s infinite;
+    border-color: rgba(0,230,255,0.5);
+    box-shadow: 0 20px 60px rgba(0,230,255,0.14), 0 0 28px rgba(0,204,255,0.18);
+}
+
+@keyframes micPulse {
+    0% { transform: translateY(0) scale(1); }
+    50% { transform: translateY(-4px) scale(1.03); }
+    100% { transform: translateY(0) scale(1); }
+}
+
+@media (max-width: 480px) {
+    .mic-btn { right: 12px; bottom: 12px; width: 44px; height: 44px; }
+}
+
+/* Voice input container (mic + input + send) */
+.voice-input {
+    /* Centered input group beneath the main square */
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    bottom: 24px;
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    z-index: 1200;
+    background: transparent;
+}
+
+.voice-input-field {
+    min-width: 160px;
+    max-width: 420px;
+    padding: 8px 12px;
+    border-radius: 18px;
+    background: rgba(0,0,0,0.55);
+    border: 1px solid rgba(0,230,255,0.12);
+    color: #cfffff;
+    outline: none;
+    font-size: 14px;
+}
+
+.voice-input-field::placeholder { color: rgba(191,255,255,0.6); }
+
+.voice-send {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0,0,0,0.6);
+    color: #cfffff;
+    border: 1px solid rgba(0,230,255,0.14);
+    cursor: pointer;
+}
+
+.voice-send:hover { transform: translateY(-2px); box-shadow: 0 12px 30px rgba(0,230,255,0.08); }
+
+@media (max-width: 480px) {
+    .voice-input-field { min-width: 120px; }
+}
+
+

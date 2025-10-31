@@ -1,0 +1,83 @@
+.floating-window {
+    display: none;
+    position: fixed;
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+    padding: 20px;
+    min-width: 300px;
+    max-width: 500px;
+    max-height: 80vh;
+    overflow-y: auto;
+    z-index: 1000;
+}
+
+.floating-window.show {
+    display: block;
+}
+
+.window-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #eee;
+}
+
+.window-title {
+    font-size: 18px;
+    font-weight: 600;
+    color: #333;
+}
+
+.close-window {
+    background: none;
+    border: none;
+    color: #666;
+    cursor: pointer;
+    font-size: 20px;
+    padding: 5px;
+}
+
+.close-window:hover {
+    color: #333;
+}
+
+.item-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.item {
+    padding: 10px;
+    margin-bottom: 8px;
+    background: #f8f9fa;
+    border-radius: 6px;
+    font-size: 14px;
+    line-height: 1.4;
+}
+
+.task-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.task-status {
+    font-size: 16px;
+    color: #666;
+}
+
+.task-complete {
+    text-decoration: line-through;
+    color: #888;
+}
+
+.window-empty {
+    text-align: center;
+    color: #666;
+    padding: 20px;
+    font-style: italic;
+}

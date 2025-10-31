@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AURA - List View</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            padding: 20px;
+            margin: 0;
+            background-color: #f8f9fa;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+        }
+
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .title {
+            font-size: 24px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .item-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .item {
+            padding: 15px;
+            margin-bottom: 10px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            font-size: 16px;
+            line-height: 1.5;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .item-status {
+            font-size: 20px;
+            color: #666;
+        }
+
+        .item-complete {
+            text-decoration: line-through;
+            color: #888;
+        }
+
+        .empty-message {
+            text-align: center;
+            color: #666;
+            padding: 30px;
+            font-style: italic;
+        }
+
+        .refresh-btn {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background-color 0.2s;
+        }
+
+        .refresh-btn:hover {
+            background: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="title" id="windowTitle">Loading...</div>
+            <button class="refresh-btn" onclick="refreshContent()">Refresh</button>
+        </div>
+        <div id="content">
+            <div class="empty-message">Loading content...</div>
+        </div>
+    </div>
+
+    <script>
+        // Get window type from URL parameter
+        const urlParams = new URLSearchParams(window.location.search);
+        const type = urlParams.get('type');
+        const apiBase = 'http://127.0.0.1:5000';
+        
+        // Set window title
+        document.title = `AURA - ${type === 'reminders' ? 'Reminders' : 'Tasks'}`;
+        document.getElementById('windowTitle').textContent = type === 'reminders' ? 'My Reminders' : 'My Tasks';
+
+        async function refreshContent() {
+            try {
+                // Send command based on window type
+                const command = type === 'reminders' ? 'show reminders' : 'show tasks';
+                const resp = await fetch(`${apiBase}/api/command`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ command: command })
+                });
+
+                if (!resp.ok) throw new Error('Server error ' + resp.status);
+                
+                const data = await resp.json();
+                const text = data.response || data.result || 'No items available.';
+                
+                const contentDiv = document.getElementById('content');
+                
+                if (text.includes('No reminders yet') || text.includes('No tasks yet')) {
+                    contentDiv.innerHTML = `<div class="empty-message">No ${type} yet.</div>`;
+                    return;
+                }
+
+                const items = text.split('\n').filter(item => item.trim());
+                const itemsHtml = items.map(item => {
+                    if (type === 'tasks') {
+                        const isComplete = item.includes('[✓]');
+                        return `<div class="item${isComplete ? ' item-complete' : ''}">
+                                    <span class="item-status">${isComplete ? '✓' : '○'}</span>
+                                    <span>${item.replace(/^\d+\.\s*\[[\✓○]\]\s*/, '')}</span>
+                                </div>`;
+                    } else {
+                        return `<div class="item">${item}</div>`;
+                    }
+                }).join('');
+
+                contentDiv.innerHTML = `<div class="item-list">${itemsHtml}</div>`;
+            } catch (error) {
+                console.error('Failed to refresh content:', error);
+                document.getElementById('content').innerHTML = 
+                    '<div class="empty-message">Error loading content. Please try again.</div>';
+            }
+        }
+
+        // Initial load
+        refreshContent();
+
+        // Refresh every 30 seconds
+        setInterval(refreshContent, 30000);
+    </script>
+</body>
+</html>
