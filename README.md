@@ -1,4 +1,4 @@
-# AURA – Local Voice Assistant (Python)
+# AURA – AI utility for real time assistance 
 
 AURA is a local desktop voice assistant built with Python. It performs speech recognition, command processing, automation, task management, web search and offline text-to-speech.
 
